@@ -107,7 +107,62 @@ jar {
         from subproject.sourceSets.main.output.classesDirs
         from subproject.sourceSets.api.output.classesDirs
         from subproject.sourceSets.main.output.resourcesDir
-        from subproject.sourceSets.api.output.resourcesDir
+    }
+}
+
+def coreProjects = [':core', ':core-api'].collect{ subproject -> project(subproject) }
+task coreJar (type: Jar, dependsOn: mainProjects.tasks['classes']) {
+    coreProjects.each { subproject ->
+        from subproject.sourceSets.main.output.classesDirs
+        from subproject.sourceSets.main.output.resourcesDir
+    }
+    mainProjects.each { subproject ->
+        from subproject.sourceSets.api.output.classesDirs
+    }
+}
+
+def botanyProjects = [':botany', ':botany-api'].collect{ subproject -> project(subproject) }
+task botanyJar (type: Jar, dependsOn: botanyProjects.tasks['classes']) {
+    botanyProjects.each { subproject ->
+        from subproject.sourceSets.main.output.classesDirs
+        from subproject.sourceSets.api.output.classesDirs
+        from subproject.sourceSets.main.output.resourcesDir
+    }
+}
+
+def designProjects = [':design', ':design-api'].collect{ subproject -> project(subproject) }
+task designJar (type: Jar, dependsOn: designProjects.tasks['classes']) {
+    designProjects.each { subproject ->
+        from subproject.sourceSets.main.output.classesDirs
+        from subproject.sourceSets.api.output.classesDirs
+        from subproject.sourceSets.main.output.resourcesDir
+    }
+}
+
+def extrabeesProjects = [':extrabees'].collect{ subproject -> project(subproject) }
+task extrabeesJar (type: Jar, dependsOn: extrabeesProjects.tasks['classes']) {
+    extrabeesProjects.each { subproject ->
+        from subproject.sourceSets.main.output.classesDirs
+        from subproject.sourceSets.api.output.classesDirs
+        from subproject.sourceSets.main.output.resourcesDir
+    }
+}
+
+def extratreesProjects = [':extratrees', ':extratrees-api'].collect{ subproject -> project(subproject) }
+task extratreesJar (type: Jar, dependsOn: extratreesProjects.tasks['classes']) {
+    extratreesProjects.each { subproject ->
+        from subproject.sourceSets.main.output.classesDirs
+        from subproject.sourceSets.api.output.classesDirs
+        from subproject.sourceSets.main.output.resourcesDir
+    }
+}
+
+def geneticsProjects = [':genetics', ':genetics-api'].collect{ subproject -> project(subproject) }
+task geneticsJar(type: Jar, dependsOn: geneticsProjects.tasks['classes']) {
+    geneticsProjects.each { subproject ->
+        from subproject.sourceSets.main.output.classesDirs
+        from subproject.sourceSets.api.output.classesDirs
+        from subproject.sourceSets.main.output.resourcesDir
     }
 }
 
@@ -129,6 +184,12 @@ task copyJars(type: Copy) {
 
 artifacts {
     archives sourcesJar
+    archives coreJar
+    archives botanyJar
+    archives designJar
+    archives extrabeesJar
+    archives extratreesJar
+    archives geneticsJar
 }
 
 uploadArchives {
@@ -158,10 +219,18 @@ curseforge {
         changelog = file('changelog.html')
         changelogType = 'html'
         releaseType = 'alpha'
+        mainArtifact jar
+        addArtifact coreJar
+        addArtifact botanyJar
+        addArtifact designJar
+        addArtifact extrabeesJar
+        addArtifact extratreesJar
+        addArtifact geneticsJar
         relations {
             requiredLibrary 'forestry'
         }
         addGameVersion '1.12'
+        addGameVersion '1.12.1'
     }
 }
 
